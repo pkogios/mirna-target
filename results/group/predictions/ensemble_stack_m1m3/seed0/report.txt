@@ -1,0 +1,31 @@
+ensemble_stack_m1m3: 1579 samples, 794 positive, threshold 0.4715
+           metric  value  ci_low  ci_high
+          roc_auc 0.8553  0.8376   0.8742
+average_precision 0.8736  0.8568   0.8918
+         log_loss 0.4658  0.4357   0.4922
+            brier 0.1520  0.1414   0.1620
+              ece 0.0323  0.0223   0.0536
+         accuracy 0.7859  0.7669   0.8062
+balanced_accuracy 0.7861  0.7671   0.8062
+        precision 0.8024  0.7803   0.8255
+           recall 0.7620  0.7330   0.7922
+      specificity 0.8102  0.7834   0.8344
+               f1 0.7817  0.7603   0.8036
+              mcc 0.5727  0.5348   0.6127
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1320          0.423    0.816              0.749
+    7mer-m8   72          0.917    0.591              0.500
+offset-6mer   46          0.783    0.783              0.500
+       6mer   40          0.900    0.812              0.500
+    7mer-A1   32          0.875    0.884              0.500
+
+By mirna_length: 4 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 808          0.512    0.843              0.781
+    23 486          0.496    0.883              0.803
+    21 157          0.484    0.865              0.794
+    19 105          0.495    0.834              0.733
+
+Saved to results/group/predictions/ensemble_stack_m1m3/seed0/report

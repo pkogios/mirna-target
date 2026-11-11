@@ -28,7 +28,7 @@ Consequence: a model can only succeed by looking at the pair.
 | Model | stratified | group |
 |---|---|---|
 | `seed_rule` (best seed complementarity, nothing learned) | 0.738 [0.715, 0.761] | 0.759 |
-| `example_cnn` (course example network, our re-implementation) | 0.805 [0.783, 0.825] | not run |
+| `example_cnn` (course example network, our re-implementation) | 0.805 [0.783, 0.825] | 0.806 [0.784, 0.827] |
 
 Only 22% of training positives contain a canonical 6-mer seed match (1.4% of
 negatives), which is why the seed rule is precise but misses most positives.
@@ -57,14 +57,16 @@ negatives), which is why the seed rule is precise but misses most positives.
 
 | Variant | stratified | group |
 |---|---|---|
-| `m3_complementarity_cnn` | 0.871 [0.852, 0.887] | not run |
+| `m3_complementarity_cnn` | 0.871 [0.854, 0.887] | 0.834 [0.814, 0.854] |
 
 Early stopping selected epoch 8 of 16 (validation loss 0.445; it overfits
 quickly afterwards: training loss 0.33, validation 0.51 at epoch 16).
 5-fold out-of-fold ROC-AUC on the training part: 0.848–0.864.
 Input-gradient saliency follows diagonals of the pair grid, and averaged over
-validation positives it peaks at miRNA positions 4–7 (1.3–1.45 times uniform),
-although the network was never told where the seed is.
+validation positives it peaks at miRNA positions 4–7 (1.47–1.60 times uniform;
+seed positions 2–8 average 1.40), although the network was never told where the
+seed is. On the group split early stopping selected epoch 4, and M3 loses more
+than M1 on unseen miRNA families (0.834 vs 0.850).
 
 ## E5. M2: cross-attention (weaker than expected)
 
@@ -72,7 +74,7 @@ although the network was never told where the seed is.
 |---|---|---|
 | `m2_scalar_bias` | learned bias per pair type on attention logits | 0.766 [0.745, 0.786] |
 | `m2_bias_only` | bias from a 3×3 convolution over the pair grid | 0.752 |
-| `m2_cross_attention` | convolutional bias + pairing added to attended values | see below |
+| `m2_cross_attention` | convolutional bias + pairing added to attended values | 0.772 [0.748, 0.795] |
 
 All variants *underfit* (training loss still about 0.53 after 27 epochs, where
 M3 reaches 0.45 in 8), so the problem is optimisation of this architecture on
@@ -80,7 +82,11 @@ M3 reaches 0.45 in 8), so the problem is optimisation of this architecture on
 attention did not help. We stopped after two redesigns; see the open question in
 `decisions.md`.
 
-<!-- M2_FINAL -->
+The three variants are within each other's intervals. `m2_cross_attention` is
+kept as M2 because it is nominally the best; 5-fold out-of-fold ROC-AUC
+0.741–0.770. Not run on the group split. Its target→miRNA attention is highest on
+miRNA positions 2–8 (1.28 times uniform, peak 2.18 at position 3) with a second
+rise at positions 13–16, the 3′ supplementary region.
 
 ## E6. Ensembles
 
@@ -93,9 +99,25 @@ The mean of M1 and M3 beats M3 by 0.0095 [0.004, 0.015] (p = 0.002) and M1 by
 0.013 [0.007, 0.019] (p = 0.002). Stacking is not better than the plain mean
 (p = 0.21).
 
-<!-- ENSEMBLE_FINAL -->
+All ensembles, both splits:
+
+| Combination | stratified | group |
+|---|---|---|
+| stack of M1, M2, M3 (weights 0.63 / 0.23 / 0.29) | 0.881 [0.865, 0.897] | – |
+| mean of M1 and M3 | 0.880 [0.863, 0.896] | 0.855 [0.837, 0.874] |
+| mean of M1, M2, M3 | 0.879 [0.863, 0.895] | – |
+| stack of M1 and M3 | 0.879 [0.863, 0.895] | 0.855 [0.838, 0.874] |
+
+- Adding M2 does not help: the three-model stack is not better than the mean of
+  M1 and M3 (difference 0.001, p = 0.57).
+- The three-model stack beats M1 by 0.014 [0.009, 0.019] (p = 0.002) and M3 by
+  0.010 [0.003, 0.018] (p = 0.008).
+- Group split: the M1+M3 stack beats M1 by 0.005 [0.001, 0.010] (p = 0.022) and
+  M3 by 0.022 [0.012, 0.032] (p = 0.002).
+- Candidate final model: the plain mean of M1 and M3. It is as good as anything
+  else, has no fitted weights, and holds on both splits.
 
 ## Not done yet
-- Neural models on the `group` split, and several seeds per model.
+- M2 on the `group` split, and several seeds per model.
 - Hyperparameter tuning (all settings are first guesses).
 - The final test evaluation.

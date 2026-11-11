@@ -1,0 +1,11 @@
+{
+  "models": [
+    "m1_features_gbm",
+    "m3_complementarity_cnn"
+  ],
+  "weights": [
+    0.6977079074955809,
+    0.3633647673428561
+  ],
+  "intercept": 0.02177245560210891
+}

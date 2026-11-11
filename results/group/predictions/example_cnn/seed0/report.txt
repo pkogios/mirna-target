@@ -1,0 +1,31 @@
+example_cnn: 1579 samples, 794 positive, threshold 0.6129
+           metric  value  ci_low  ci_high
+          roc_auc 0.8055  0.7837   0.8270
+average_precision 0.8070  0.7839   0.8296
+         log_loss 0.5425  0.5151   0.5703
+            brier 0.1818  0.1709   0.1928
+              ece 0.0437  0.0331   0.0638
+         accuracy 0.7410  0.7194   0.7619
+balanced_accuracy 0.7412  0.7197   0.7620
+        precision 0.7655  0.7385   0.7901
+           recall 0.6990  0.6688   0.7305
+      specificity 0.7834  0.7529   0.8102
+               f1 0.7307  0.7070   0.7541
+              mcc 0.4840  0.4404   0.5250
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1320          0.423    0.773              0.711
+    7mer-m8   72          0.917    0.889              0.765
+offset-6mer   46          0.783    0.669              0.617
+       6mer   40          0.900    0.493              0.500
+    7mer-A1   32          0.875    0.750              0.661
+
+By mirna_length: 4 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 808          0.512    0.791              0.734
+    23 486          0.496    0.854              0.776
+    21 157          0.484    0.798              0.719
+    19 105          0.495    0.772              0.694
+
+Saved to results/group/predictions/example_cnn/seed0/report

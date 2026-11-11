@@ -1,0 +1,7 @@
+{
+  "models": [
+    "m1_features_gbm",
+    "m2_cross_attention",
+    "m3_complementarity_cnn"
+  ]
+}

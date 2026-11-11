@@ -1,0 +1,5 @@
+{
+  "threshold": 0.48135071992874146,
+  "criterion": "balanced_accuracy",
+  "selected_on": "results/stratified/validation_answers.csv"
+}

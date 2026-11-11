@@ -1,0 +1,6 @@
+{
+  "models": [
+    "m1_features_gbm",
+    "m3_complementarity_cnn"
+  ]
+}

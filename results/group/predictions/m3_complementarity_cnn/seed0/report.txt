@@ -1,0 +1,31 @@
+m3_complementarity_cnn: 1579 samples, 794 positive, threshold 0.5496
+           metric  value  ci_low  ci_high
+          roc_auc 0.8336  0.8136   0.8542
+average_precision 0.8523  0.8310   0.8730
+         log_loss 0.4954  0.4667   0.5233
+            brier 0.1631  0.1520   0.1735
+              ece 0.0152  0.0167   0.0416
+         accuracy 0.7682  0.7492   0.7897
+balanced_accuracy 0.7688  0.7499   0.7902
+        precision 0.8429  0.8193   0.8674
+           recall 0.6625  0.6297   0.6965
+      specificity 0.8752  0.8510   0.8968
+               f1 0.7419  0.7178   0.7674
+              mcc 0.5498  0.5110   0.5905
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1320          0.423    0.786              0.714
+    7mer-m8   72          0.917    0.414              0.492
+offset-6mer   46          0.783    0.772              0.536
+       6mer   40          0.900    0.840              0.708
+    7mer-A1   32          0.875    0.911              0.500
+
+By mirna_length: 4 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 808          0.512    0.809              0.746
+    23 486          0.496    0.868              0.807
+    21 157          0.484    0.857              0.793
+    19 105          0.495    0.872              0.741
+
+Saved to results/group/predictions/m3_complementarity_cnn/seed0/report

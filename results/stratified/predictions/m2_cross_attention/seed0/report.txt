@@ -1,0 +1,33 @@
+m2_cross_attention: 1628 samples, 817 positive, threshold 0.4826
+           metric  value  ci_low  ci_high
+          roc_auc 0.7716  0.7484   0.7953
+average_precision 0.7293  0.7008   0.7611
+         log_loss 0.5748  0.5486   0.6013
+            brier 0.1940  0.1830   0.2048
+              ece 0.0295  0.0252   0.0585
+         accuracy 0.7168  0.6953   0.7389
+balanced_accuracy 0.7166  0.6951   0.7387
+        precision 0.6947  0.6747   0.7178
+           recall 0.7772  0.7503   0.8042
+      specificity 0.6560  0.6239   0.6905
+               f1 0.7337  0.7135   0.7545
+              mcc 0.4365  0.3929   0.4797
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1376          0.422    0.753              0.702
+    7mer-m8   69          0.942    0.931              0.783
+offset-6mer   60          0.900    0.840              0.750
+       6mer   39          0.923    0.667              0.736
+    7mer-A1   24          0.875    0.651              0.810
+
+By mirna_length: 6 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 981          0.503    0.782              0.734
+    23 352          0.503    0.744              0.679
+    21 158          0.532    0.699              0.666
+    24  61          0.508    0.844              0.737
+    19  29          0.552    0.870              0.776
+    20  26          0.385    0.769              0.675
+
+Saved to results/stratified/predictions/m2_cross_attention/seed0/report

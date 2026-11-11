@@ -1,0 +1,31 @@
+m1_features_gbm: 1579 samples, 794 positive, threshold 0.5755
+           metric  value  ci_low  ci_high
+          roc_auc 0.8500  0.8319   0.8696
+average_precision 0.8698  0.8535   0.8878
+         log_loss 0.4763  0.4459   0.5035
+            brier 0.1557  0.1444   0.1659
+              ece 0.0340  0.0266   0.0556
+         accuracy 0.7878  0.7695   0.8087
+balanced_accuracy 0.7883  0.7700   0.8091
+        precision 0.8410  0.8191   0.8644
+           recall 0.7128  0.6826   0.7456
+      specificity 0.8637  0.8408   0.8854
+               f1 0.7716  0.7498   0.7954
+              mcc 0.5829  0.5470   0.6234
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1320          0.423    0.809              0.742
+    7mer-m8   72          0.917    0.707              0.500
+offset-6mer   46          0.783    0.717              0.500
+       6mer   40          0.900    0.785              0.486
+    7mer-A1   32          0.875    0.741              0.625
+
+By mirna_length: 4 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 808          0.512    0.840              0.775
+    23 486          0.496    0.879              0.825
+    21 157          0.484    0.849              0.787
+    19 105          0.495    0.789              0.722
+
+Saved to results/group/predictions/m1_features_gbm/seed0/report

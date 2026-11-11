@@ -1,0 +1,31 @@
+mirna_only: 1579 samples, 794 positive, threshold 0.4955
+           metric  value  ci_low  ci_high
+          roc_auc 0.5001  0.4723   0.5272
+average_precision 0.5022  0.4838   0.5255
+         log_loss 0.6937  0.6920   0.6955
+            brier 0.2503  0.2494   0.2512
+              ece 0.0134  0.0015   0.0373
+         accuracy 0.5054  0.4845   0.5250
+balanced_accuracy 0.5037  0.4829   0.5234
+        precision 0.5052  0.4920   0.5178
+           recall 0.7947  0.7657   0.8224
+      specificity 0.2127  0.1834   0.2408
+               f1 0.6177  0.5999   0.6340
+              mcc 0.0092 -0.0410   0.0581
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1320          0.423    0.519              0.518
+    7mer-m8   72          0.917    0.220              0.364
+offset-6mer   46          0.783    0.528              0.583
+       6mer   40          0.900    0.247              0.500
+    7mer-A1   32          0.875    0.545              0.554
+
+By mirna_length: 4 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 808          0.512    0.496              0.503
+    23 486          0.496    0.504              0.502
+    21 157          0.484    0.481              0.498
+    19 105          0.495    0.500              0.500
+
+Saved to results/group/predictions/mirna_only/seed0/report

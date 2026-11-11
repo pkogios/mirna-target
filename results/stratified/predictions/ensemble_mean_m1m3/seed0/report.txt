@@ -1,0 +1,33 @@
+ensemble_mean_m1m3: 1628 samples, 817 positive, threshold 0.4792
+           metric  value  ci_low  ci_high
+          roc_auc 0.8801  0.8633   0.8958
+average_precision 0.8926  0.8756   0.9074
+         log_loss 0.4322  0.4086   0.4573
+            brier 0.1389  0.1297   0.1482
+              ece 0.0228  0.0222   0.0475
+         accuracy 0.8016  0.7825   0.8207
+balanced_accuracy 0.8017  0.7827   0.8208
+        precision 0.8241  0.8015   0.8477
+           recall 0.7687  0.7393   0.7968
+      specificity 0.8348  0.8089   0.8607
+               f1 0.7954  0.7750   0.8161
+              mcc 0.6047  0.5674   0.6436
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1376          0.422    0.844              0.761
+    7mer-m8   69          0.942    0.785              0.500
+offset-6mer   60          0.900    0.880              0.667
+       6mer   39          0.923    0.898              0.667
+    7mer-A1   24          0.875    0.730              0.500
+
+By mirna_length: 6 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 981          0.503    0.891              0.810
+    23 352          0.503    0.871              0.787
+    21 158          0.532    0.872              0.801
+    24  61          0.508    0.791              0.722
+    19  29          0.552    0.875              0.829
+    20  26          0.385    0.869              0.806
+
+Saved to results/stratified/predictions/ensemble_mean_m1m3/seed0/report

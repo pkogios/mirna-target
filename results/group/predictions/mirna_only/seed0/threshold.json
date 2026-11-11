@@ -1,0 +1,5 @@
+{
+  "threshold": 0.4954525929772679,
+  "criterion": "balanced_accuracy",
+  "selected_on": "results/group/validation_answers.csv"
+}

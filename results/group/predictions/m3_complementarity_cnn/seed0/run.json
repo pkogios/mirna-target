@@ -1,0 +1,87 @@
+{
+  "model": "m3_complementarity_cnn",
+  "split": "group",
+  "seed": 0,
+  "settings": {
+    "kind": "neural",
+    "network": "complementarity_cnn",
+    "channels": 32,
+    "dilations": [
+      1,
+      2,
+      1
+    ],
+    "dropout": 0.2,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "max_epochs": 40,
+    "patience": 8
+  },
+  "best_rounds": 4,
+  "n_train": 6561,
+  "n_validation": 1579,
+  "fit_seconds": 663.7,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.6845969007048297,
+      "validation_loss": 0.654319167137146
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.6216344243959399,
+      "validation_loss": 0.5312391519546509
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5285795108880634,
+      "validation_loss": 0.5349997282028198
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.48815656624958115,
+      "validation_loss": 0.49544042348861694
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.46864662699956683,
+      "validation_loss": 0.49870431423187256
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.45874821801335325,
+      "validation_loss": 0.511924684047699
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.4458793776734103,
+      "validation_loss": 0.49783891439437866
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.43352080389886816,
+      "validation_loss": 0.5319706201553345
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.4203628007094865,
+      "validation_loss": 0.523210883140564
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.4000487598935345,
+      "validation_loss": 0.5096310377120972
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.3868890606017942,
+      "validation_loss": 0.6478211879730225
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.37420902979335774,
+      "validation_loss": 0.5543882846832275
+    }
+  ],
+  "oof_folds": 5
+}

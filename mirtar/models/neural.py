@@ -1,7 +1,7 @@
 """Neural predictors. All networks take token tensors (miRNA, reversed target).
 
-M2  CrossAttentionNet   miRNA and target attend to each other; the attention can be
-                        biased by a learned score per base-pair type (pair_bias).
+M2  CrossAttentionNet   miRNA and target attend to each other; the attention is
+                        biased by the local base-pairing pattern (pair_bias).
 M3  ComplementarityNet  residual 2D CNN on a grid of pair types (G:C, A:U, G:U,
                         mismatch) in the antiparallel orientation.
     ExampleCNN          the course example network (16 ordered-pair channels + pad,
@@ -112,14 +112,22 @@ class CrossBlock(nn.Module):
 class CrossAttentionNet(nn.Module):
     """Each miRNA position looks at all target positions and vice versa.
 
-    ``pair_bias``: every head adds a learned scalar per pair type (G:C, A:U, G:U,
-    mismatch) to its attention logits, so attending to a complementary base does
-    not have to be discovered from 6,500 examples. Setting it to False gives the
-    plain cross-attention model (ablation).
+    ``pair_bias`` adds a term to the attention logits of every head, so that
+    attending to a complementary base does not have to be discovered from 6,500
+    examples:
+
+    "none"    plain cross-attention (ablation)
+    "scalar"  one learned number per pair type (G:C, A:U, G:U, mismatch)
+    "conv"    a small 2D convolution over the pair-type grid, so the bias of a
+              cell also depends on its neighbours: a base pair inside a stretch
+              of consecutive pairs gets a different bias from an isolated one
     """
 
-    def __init__(self, dim: int = 64, heads: int = 4, layers: int = 2, dropout: float = 0.2, pair_bias: bool = True):
+    def __init__(self, dim: int = 64, heads: int = 4, layers: int = 2, dropout: float = 0.2,
+                 pair_bias: str = "conv", bias_channels: int = 16):
         super().__init__()
+        if pair_bias not in ("none", "scalar", "conv"):
+            raise ValueError(f"pair_bias must be none, scalar or conv, got {pair_bias!r}")
         self.pair_bias = pair_bias
         self.register_buffer("pair_table", torch.from_numpy(PAIR_TABLE))
         self.embed_mirna, self.embed_target = nn.Embedding(5, dim, padding_idx=0), nn.Embedding(5, dim, padding_idx=0)
@@ -130,8 +138,16 @@ class CrossAttentionNet(nn.Module):
         self.local_target = nn.Conv1d(dim, dim, 3, padding=1)
         self.mirna_blocks = nn.ModuleList(CrossBlock(dim, heads, dropout) for _ in range(layers))
         self.target_blocks = nn.ModuleList(CrossBlock(dim, heads, dropout) for _ in range(layers))
-        self.bias_mirna = nn.ModuleList(nn.Embedding(5, heads) for _ in range(layers)) if pair_bias else None
-        self.bias_target = nn.ModuleList(nn.Embedding(5, heads) for _ in range(layers)) if pair_bias else None
+        if pair_bias == "scalar":
+            self.bias_mirna = nn.ModuleList(nn.Embedding(5, heads) for _ in range(layers))
+            self.bias_target = nn.ModuleList(nn.Embedding(5, heads) for _ in range(layers))
+        elif pair_bias == "conv":
+            self.bias_trunk = nn.Sequential(
+                nn.Conv2d(5, bias_channels, 3, padding=1), nn.ReLU(),
+                nn.Conv2d(bias_channels, bias_channels, 3, padding=1), nn.ReLU(),
+            )
+            self.bias_mirna = nn.ModuleList(nn.Conv2d(bias_channels, heads, 1) for _ in range(layers))
+            self.bias_target = nn.ModuleList(nn.Conv2d(bias_channels, heads, 1) for _ in range(layers))
         self.head = nn.Sequential(nn.LayerNorm(4 * dim), nn.Linear(4 * dim, 64), nn.GELU(), nn.Dropout(dropout), nn.Linear(64, 1))
 
     @staticmethod
@@ -149,11 +165,16 @@ class CrossAttentionNet(nn.Module):
         m = m + self.local_mirna(m.transpose(1, 2)).transpose(1, 2)
         t = t + self.local_target(t.transpose(1, 2)).transpose(1, 2)
         pair_class = self.pair_table[mirna[:, :, None], target[:, None, :]]  # batch x miRNA x target
+        if self.pair_bias == "conv":
+            pair_map = self.bias_trunk(F.one_hot(pair_class, 5).permute(0, 3, 1, 2).float())
         for layer, (mirna_block, target_block) in enumerate(zip(self.mirna_blocks, self.target_blocks)):
-            bias_m = bias_t = None
-            if self.pair_bias:
+            bias_m = bias_t = None  # batch x heads x queries x keys
+            if self.pair_bias == "scalar":
                 bias_m = self.bias_mirna[layer](pair_class).permute(0, 3, 1, 2)
                 bias_t = self.bias_target[layer](pair_class).permute(0, 3, 2, 1)
+            elif self.pair_bias == "conv":
+                bias_m = self.bias_mirna[layer](pair_map)
+                bias_t = self.bias_target[layer](pair_map).transpose(2, 3)
             new_m = mirna_block(m, t, x_padding=padding, bias=bias_m)
             t = target_block(t, m, context_padding=padding, bias=bias_t)
             m = new_m

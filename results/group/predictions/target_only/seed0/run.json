@@ -1,0 +1,14 @@
+{
+  "model": "target_only",
+  "split": "group",
+  "seed": 0,
+  "settings": {
+    "kind": "KmerLogistic",
+    "use": "target"
+  },
+  "best_rounds": 0,
+  "n_train": 6561,
+  "n_validation": 1579,
+  "fit_seconds": 1.5,
+  "history": []
+}

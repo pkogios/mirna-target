@@ -1,5 +1,6 @@
 # One entry per model name. `kind` selects the class; the rest are its arguments.
-# Every value here was chosen on validation data only (see docs/experiments.md).
+# These are first, untuned settings. Any tuning must use validation data only and
+# be recorded in docs/experiments.md.
 
 # --- M1: biological features + gradient boosting ---------------------------------
 m1_features_gbm:
@@ -20,7 +21,7 @@ m2_cross_attention:
   heads: 4
   layers: 2
   dropout: 0.2
-  pair_bias: true
+  pair_bias: conv
   learning_rate: 0.001
   weight_decay: 0.01
   max_epochs: 60
@@ -79,6 +80,18 @@ m1_composition_only:    # M1 with composition features only
   subsample: 0.8
   subsample_freq: 1
   colsample_bytree: 0.7
+m2_scalar_bias:         # M2 with one learned bias per pair type, no neighbourhood
+  kind: neural
+  network: cross_attention
+  dim: 64
+  heads: 4
+  layers: 2
+  dropout: 0.2
+  pair_bias: scalar
+  learning_rate: 0.001
+  weight_decay: 0.01
+  max_epochs: 60
+  patience: 10
 m2_no_pair_bias:        # M2 as a plain cross-attention model
   kind: neural
   network: cross_attention
@@ -86,7 +99,7 @@ m2_no_pair_bias:        # M2 as a plain cross-attention model
   heads: 4
   layers: 2
   dropout: 0.2
-  pair_bias: false
+  pair_bias: none
   learning_rate: 0.001
   weight_decay: 0.01
   max_epochs: 60

@@ -79,7 +79,10 @@ class BiasedAttention(nn.Module):
         self.dropout = nn.Dropout(dropout)
         self.last_attention = None
 
-    def forward(self, x, context, key_padding=None, bias=None):
+    def forward(self, x, context, key_padding=None, bias=None, edge=None):
+        """``bias``: batch x heads x queries x keys, added to the attention logits.
+        ``edge``: batch x queries x keys x dim, added to the value of each (query, key) pair,
+        so a position also receives *how* it pairs with what it attends to."""
         batch, n, dim = x.shape
         split = lambda tensor: tensor.view(batch, -1, self.heads, dim // self.heads).transpose(1, 2)
         q, k, v = split(self.query(x)), split(self.key(context)), split(self.value(context))
@@ -90,8 +93,12 @@ class BiasedAttention(nn.Module):
             logits = logits.masked_fill(key_padding[:, None, None, :], float("-inf"))
         attention = logits.softmax(dim=-1)
         self.last_attention = attention.detach()
-        mixed = (self.dropout(attention) @ v).transpose(1, 2).reshape(batch, n, dim)
-        return self.out(mixed)
+        weights = self.dropout(attention)
+        mixed = weights @ v
+        if edge is not None:
+            per_head = edge.view(batch, n, -1, self.heads, dim // self.heads)
+            mixed = mixed + torch.einsum("bhnm,bnmhd->bhnd", weights, per_head)
+        return self.out(mixed.transpose(1, 2).reshape(batch, n, dim))
 
 
 class CrossBlock(nn.Module):
@@ -102,8 +109,8 @@ class CrossBlock(nn.Module):
         self.feed_forward = nn.Sequential(nn.Linear(dim, 2 * dim), nn.GELU(), nn.Dropout(dropout), nn.Linear(2 * dim, dim))
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, x, context, x_padding=None, context_padding=None, bias=None):
-        x = x + self.dropout(self.cross(self.norm1(x), context, context_padding, bias))
+    def forward(self, x, context, x_padding=None, context_padding=None, bias=None, edge=None):
+        x = x + self.dropout(self.cross(self.norm1(x), context, context_padding, bias, edge))
         normed = self.norm2(x)
         x = x + self.dropout(self.self_attention(normed, normed, x_padding))
         return x + self.dropout(self.feed_forward(self.norm3(x)))
@@ -121,14 +128,22 @@ class CrossAttentionNet(nn.Module):
     "conv"    a small 2D convolution over the pair-type grid, so the bias of a
               cell also depends on its neighbours: a base pair inside a stretch
               of consecutive pairs gets a different bias from an isolated one
+
+    ``pair_values`` (needs a pair_bias): the same pairing information is also added
+    to the attended values, like edge features in a graph network. The bias only
+    steers *where* a position looks; with pair_values the position also learns
+    whether what it looked at actually pairs with it.
     """
 
     def __init__(self, dim: int = 64, heads: int = 4, layers: int = 2, dropout: float = 0.2,
-                 pair_bias: str = "conv", bias_channels: int = 16):
+                 pair_bias: str = "conv", bias_channels: int = 16, pair_values: bool = True):
         super().__init__()
         if pair_bias not in ("none", "scalar", "conv"):
             raise ValueError(f"pair_bias must be none, scalar or conv, got {pair_bias!r}")
         self.pair_bias = pair_bias
+        self.pair_values = pair_values and pair_bias != "none"
+        if self.pair_values:
+            self.edge = nn.Embedding(5, dim) if pair_bias == "scalar" else nn.Linear(bias_channels, dim)
         self.register_buffer("pair_table", torch.from_numpy(PAIR_TABLE))
         self.embed_mirna, self.embed_target = nn.Embedding(5, dim, padding_idx=0), nn.Embedding(5, dim, padding_idx=0)
         self.position_mirna = nn.Parameter(torch.randn(MAX_MIRNA_LENGTH, dim) * 0.02)
@@ -167,6 +182,9 @@ class CrossAttentionNet(nn.Module):
         pair_class = self.pair_table[mirna[:, :, None], target[:, None, :]]  # batch x miRNA x target
         if self.pair_bias == "conv":
             pair_map = self.bias_trunk(F.one_hot(pair_class, 5).permute(0, 3, 1, 2).float())
+        edge = None  # batch x miRNA x target x dim
+        if self.pair_values:
+            edge = self.edge(pair_class if self.pair_bias == "scalar" else pair_map.permute(0, 2, 3, 1))
         for layer, (mirna_block, target_block) in enumerate(zip(self.mirna_blocks, self.target_blocks)):
             bias_m = bias_t = None  # batch x heads x queries x keys
             if self.pair_bias == "scalar":
@@ -175,8 +193,8 @@ class CrossAttentionNet(nn.Module):
             elif self.pair_bias == "conv":
                 bias_m = self.bias_mirna[layer](pair_map)
                 bias_t = self.bias_target[layer](pair_map).transpose(2, 3)
-            new_m = mirna_block(m, t, x_padding=padding, bias=bias_m)
-            t = target_block(t, m, context_padding=padding, bias=bias_t)
+            new_m = mirna_block(m, t, x_padding=padding, bias=bias_m, edge=edge)
+            t = target_block(t, m, context_padding=padding, bias=bias_t, edge=None if edge is None else edge.transpose(1, 2))
             m = new_m
         return self.head(torch.cat([self._pool(m, padding), self._pool(t)], dim=1)).squeeze(1)
 

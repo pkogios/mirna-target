@@ -56,6 +56,8 @@ Nothing in the repository downloads the test file except
 ensemble weights are committed; the commit hash will be recorded here.
 
 ## Open questions for the team
+- M2 underfits (experiments E5). Keep it as a documented weaker model, try a
+  learning-rate schedule / longer training on ARIS, or replace it?
 - Early stopping uses the validation set, as in the example. Validation scores of
   the neural models are therefore mildly optimistic. Accept, or carve an inner
   early-stopping set out of the training part?

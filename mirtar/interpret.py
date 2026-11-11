@@ -114,7 +114,7 @@ def main(argv=None) -> None:
     m3 = load_model(args.split, "m3_complementarity_cnn", args.seed)
     if m3 is not None:
         grids = saliency(m3, mirna, target)
-        per_position = grids.sum(2)
+        per_position = grids.sum(2) * (np.arange(grids.shape[1])[None, :] < lengths[:, None])  # ignore padding rows
         per_position = per_position / per_position.sum(1, keepdims=True) * lengths[:, None]
         profiles["M3: input-gradient saliency (1 = uniform)"] = masked_mean(per_position, lengths)
 

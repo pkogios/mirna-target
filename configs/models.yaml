@@ -80,7 +80,20 @@ m1_composition_only:    # M1 with composition features only
   subsample: 0.8
   subsample_freq: 1
   colsample_bytree: 0.7
-m2_scalar_bias:         # M2 with one learned bias per pair type, no neighbourhood
+m2_bias_only:           # M2 with the convolutional bias but without pairing in the values
+  kind: neural
+  network: cross_attention
+  dim: 64
+  heads: 4
+  layers: 2
+  dropout: 0.2
+  pair_bias: conv
+  pair_values: false
+  learning_rate: 0.001
+  weight_decay: 0.01
+  max_epochs: 60
+  patience: 10
+m2_scalar_bias:         # M2 with one learned bias per pair type, no neighbourhood, no pair values
   kind: neural
   network: cross_attention
   dim: 64
@@ -88,6 +101,7 @@ m2_scalar_bias:         # M2 with one learned bias per pair type, no neighbourho
   layers: 2
   dropout: 0.2
   pair_bias: scalar
+  pair_values: false
   learning_rate: 0.001
   weight_decay: 0.01
   max_epochs: 60

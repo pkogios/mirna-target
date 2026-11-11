@@ -1,0 +1,33 @@
+seed_rule: 1628 samples, 817 positive, threshold 0.7857
+           metric  value  ci_low  ci_high
+          roc_auc 0.7378  0.7145   0.7608
+average_precision 0.7371  0.7146   0.7595
+         log_loss 0.7610  0.7277   0.8025
+            brier 0.2693  0.2643   0.2744
+              ece 0.2416  0.2354   0.2472
+         accuracy 0.6818  0.6597   0.7033
+balanced_accuracy 0.6822  0.6601   0.7037
+        precision 0.7241  0.6962   0.7528
+           recall 0.5912  0.5557   0.6206
+      specificity 0.7731  0.7447   0.8027
+               f1 0.6509  0.6245   0.6764
+              mcc 0.3704  0.3264   0.4148
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1376          0.422    0.650              0.607
+    7mer-m8   69          0.942    0.500              0.500
+offset-6mer   60          0.900    0.611              0.500
+       6mer   39          0.923    0.708              0.500
+    7mer-A1   24          0.875    0.667              0.500
+
+By mirna_length: 6 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 981          0.503    0.749              0.691
+    23 352          0.503    0.739              0.679
+    21 158          0.532    0.739              0.695
+    24  61          0.508    0.701              0.674
+    19  29          0.552    0.385              0.478
+    20  26          0.385    0.625              0.581
+
+Saved to results/stratified/predictions/seed_rule/seed0/report

@@ -1,0 +1,104 @@
+# One entry per model name. `kind` selects the class; the rest are its arguments.
+# Every value here was chosen on validation data only (see docs/experiments.md).
+
+# --- M1: biological features + gradient boosting ---------------------------------
+m1_features_gbm:
+  kind: FeatureGBM
+  learning_rate: 0.03
+  num_leaves: 15
+  min_child_samples: 20
+  subsample: 0.8
+  subsample_freq: 1
+  colsample_bytree: 0.7
+  reg_lambda: 1.0
+
+# --- M2: cross-attention between miRNA and target --------------------------------
+m2_cross_attention:
+  kind: neural
+  network: cross_attention
+  dim: 64
+  heads: 4
+  layers: 2
+  dropout: 0.2
+  pair_bias: true
+  learning_rate: 0.001
+  weight_decay: 0.01
+  max_epochs: 60
+  patience: 10
+
+# --- M3: residual CNN on the base-pair grid --------------------------------------
+m3_complementarity_cnn:
+  kind: neural
+  network: complementarity_cnn
+  channels: 32
+  dilations: [1, 2, 1]
+  dropout: 0.2
+  learning_rate: 0.001
+  weight_decay: 0.01
+  max_epochs: 40
+  patience: 8
+
+# --- references ------------------------------------------------------------------
+example_cnn:            # the course example network, unchanged
+  kind: neural
+  network: example_cnn
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  max_epochs: 15
+  patience: 15
+
+seed_rule:              # no learning: best seed complementarity
+  kind: SeedRule
+
+kmer_logistic:          # k-mer counts of both sequences, no interaction
+  kind: KmerLogistic
+  use: both
+
+# --- shortcut checks: models that see only one of the two sequences ---------------
+mirna_only:
+  kind: KmerLogistic
+  use: mirna
+target_only:
+  kind: KmerLogistic
+  use: target
+
+# --- ablations ---------------------------------------------------------------------
+m1_no_seed:             # M1 without seed and site features
+  kind: FeatureGBM
+  drop_groups: [seed, site]
+  learning_rate: 0.03
+  num_leaves: 15
+  subsample: 0.8
+  subsample_freq: 1
+  colsample_bytree: 0.7
+m1_composition_only:    # M1 with composition features only
+  kind: FeatureGBM
+  drop_groups: [seed, site, ext, glob]
+  learning_rate: 0.03
+  num_leaves: 15
+  subsample: 0.8
+  subsample_freq: 1
+  colsample_bytree: 0.7
+m2_no_pair_bias:        # M2 as a plain cross-attention model
+  kind: neural
+  network: cross_attention
+  dim: 64
+  heads: 4
+  layers: 2
+  dropout: 0.2
+  pair_bias: false
+  learning_rate: 0.001
+  weight_decay: 0.01
+  max_epochs: 60
+  patience: 10
+m3_no_position:         # M3 without the miRNA position channel
+  kind: neural
+  network: complementarity_cnn
+  channels: 32
+  dilations: [1, 2, 1]
+  dropout: 0.2
+  position_channel: false
+  learning_rate: 0.001
+  weight_decay: 0.01
+  max_epochs: 40
+  patience: 8

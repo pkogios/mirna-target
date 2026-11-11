@@ -1,0 +1,26 @@
+{
+  "name": "mirna_only",
+  "n": 1628,
+  "n_positive": 817,
+  "threshold": 0.431331526791116,
+  "confusion": {
+    "tp": 817,
+    "fp": 811,
+    "tn": 0,
+    "fn": 0
+  },
+  "metrics": {
+    "roc_auc": 0.4375795178595414,
+    "average_precision": 0.45163573527743783,
+    "log_loss": 0.7002370414732886,
+    "brier": 0.25353131323030903,
+    "ece": 0.0558687293683528,
+    "accuracy": 0.5018427518427518,
+    "balanced_accuracy": 0.5,
+    "precision": 0.5018427518427518,
+    "recall": 1.0,
+    "specificity": 0.0,
+    "f1": 0.6683026584867076,
+    "mcc": 0.0
+  }
+}

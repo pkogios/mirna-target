@@ -1,0 +1,33 @@
+m1_composition_only: 1628 samples, 817 positive, threshold 0.4800
+           metric  value  ci_low  ci_high
+          roc_auc 0.7200  0.6962   0.7445
+average_precision 0.6854  0.6553   0.7166
+         log_loss 0.6136  0.5952   0.6315
+            brier 0.2126  0.2047   0.2202
+              ece 0.0207  0.0178   0.0462
+         accuracy 0.6677  0.6474   0.6910
+balanced_accuracy 0.6673  0.6470   0.6907
+        precision 0.6423  0.6242   0.6639
+           recall 0.7625  0.7356   0.7907
+      specificity 0.5721  0.5388   0.6067
+               f1 0.6973  0.6778   0.7181
+              mcc 0.3410  0.2993   0.3874
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1376          0.422    0.712              0.662
+    7mer-m8   69          0.942    0.838              0.775
+offset-6mer   60          0.900    0.713              0.787
+       6mer   39          0.923    0.694              0.681
+    7mer-A1   24          0.875    0.508              0.476
+
+By mirna_length: 6 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 981          0.503    0.742              0.688
+    23 352          0.503    0.672              0.633
+    21 158          0.532    0.667              0.593
+    24  61          0.508    0.671              0.590
+    19  29          0.552    0.784              0.784
+    20  26          0.385    0.812              0.794
+
+Saved to results/stratified/predictions/m1_composition_only/seed0/report

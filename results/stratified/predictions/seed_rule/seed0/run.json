@@ -1,0 +1,13 @@
+{
+  "model": "seed_rule",
+  "split": "stratified",
+  "seed": 0,
+  "settings": {
+    "kind": "SeedRule"
+  },
+  "best_rounds": 0,
+  "n_train": 6512,
+  "n_validation": 1628,
+  "fit_seconds": 1.2,
+  "history": []
+}

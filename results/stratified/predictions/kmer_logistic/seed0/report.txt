@@ -1,0 +1,33 @@
+kmer_logistic: 1628 samples, 817 positive, threshold 0.3334
+           metric  value  ci_low  ci_high
+          roc_auc 0.4509  0.4217   0.4796
+average_precision 0.4688  0.4484   0.4933
+         log_loss 0.7093  0.7038   0.7153
+            brier 0.2580  0.2552   0.2609
+              ece 0.0834  0.0588   0.1080
+         accuracy 0.5037  0.5012   0.5061
+balanced_accuracy 0.5019  0.4994   0.5043
+        precision 0.5028  0.5015   0.5040
+           recall 0.9988  0.9963   1.0000
+      specificity 0.0049  0.0012   0.0099
+               f1 0.6689  0.6672   0.6702
+              mcc 0.0335 -0.0142   0.0660
+
+By site_type: 5 group(s) with >= 20 samples and both classes
+      group    n  positive_rate  roc_auc  balanced_accuracy
+       none 1376          0.422    0.462              0.502
+    7mer-m8   69          0.942    0.704              0.500
+offset-6mer   60          0.900    0.370              0.500
+       6mer   39          0.923    0.148              0.500
+    7mer-A1   24          0.875    0.270              0.500
+
+By mirna_length: 6 group(s) with >= 20 samples and both classes
+ group   n  positive_rate  roc_auc  balanced_accuracy
+    22 981          0.503    0.463              0.502
+    23 352          0.503    0.430              0.503
+    21 158          0.532    0.376              0.500
+    24  61          0.508    0.456              0.500
+    19  29          0.552    0.678              0.500
+    20  26          0.385    0.513              0.500
+
+Saved to results/stratified/predictions/kmer_logistic/seed0/report

@@ -1,0 +1,22 @@
+{
+  "model": "m1_no_seed",
+  "split": "stratified",
+  "seed": 0,
+  "settings": {
+    "kind": "FeatureGBM",
+    "drop_groups": [
+      "seed",
+      "site"
+    ],
+    "learning_rate": 0.03,
+    "num_leaves": 15,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.7
+  },
+  "best_rounds": 240,
+  "n_train": 6512,
+  "n_validation": 1628,
+  "fit_seconds": 7.5,
+  "history": []
+}

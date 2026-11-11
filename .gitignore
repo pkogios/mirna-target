@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# data and trained models are downloaded / recreated, never committed
+data/
+artifacts/
+logs/
+
+# test-set outputs appear only after the single final evaluation
